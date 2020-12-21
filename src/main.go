@@ -20,7 +20,8 @@ func main() {
 	fileReader := libs.FileReader{}
 	printer := libs.Printer{}
 	requestClient := libs.RequestClient{}
-	c := core.CreateCore(&fileFinder, &fileShredder, &fileReader, &printer, &requestClient)
+	fileCreator := libs.FileCreator{}
+	c := core.CreateCore(&fileFinder, &fileShredder, &fileReader, &printer, &requestClient, &fileCreator)
 	commandMap := cli.CommandMap{}
 	commandInterpreter := cli.CommandInterpreter{}
 	commandLauncher := cli.CommandLauncher{
@@ -37,6 +38,12 @@ func main() {
 	commandMap.Add("cat", func(args []string, options map[string]string) {
 		if err := c.PrintFileContent(args[0]); err != nil {
 			fmt.Printf("command \"cat\" failed: %s", err)
+		}
+	})
+
+	commandMap.Add("make", func(args []string, options map[string]string) {
+		if err := c.CreateFiles(args); err != nil {
+			fmt.Printf("command \"make\" failed: %s", err)
 		}
 	})
 
