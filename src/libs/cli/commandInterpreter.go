@@ -1,6 +1,8 @@
 package cli
 
-import "strings"
+import (
+	"strings"
+)
 
 type CommandInterpreter struct{}
 
@@ -18,8 +20,8 @@ func splitOption(option string) (string, string) {
 }
 
 func extractOptions(args []string) (map[string]string, []string) {
+	var argsRest []string
 	options := make(map[string]string)
-	argsRest := make([]string, len(args))
 
 	for index, arg := range args {
 		if strings.Index(arg, "-") != -1 {
