@@ -13,7 +13,7 @@ type CommandInterpretation struct {
 }
 
 func splitOption(option string) (string, string) {
-	optionWithoutDash := option[1:]
+	optionWithoutDash := option[2:]
 	keyValuePair := strings.Split(optionWithoutDash, "=")
 
 	return keyValuePair[0], keyValuePair[1]
@@ -24,7 +24,7 @@ func extractOptions(args []string) (map[string]string, []string) {
 	options := make(map[string]string)
 
 	for index, arg := range args {
-		if strings.Index(arg, "-") != -1 {
+		if strings.Index(arg, "--") != -1 {
 			name, value := splitOption(args[index])
 			options[name] = value
 		} else {
