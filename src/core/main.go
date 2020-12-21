@@ -9,6 +9,7 @@ type Core struct {
 	DeleteFile       usecases.FilesDeletionInteractor
 	PrintFileContent usecases.FileContentPrintInteractor
 	SendRequest      usecases.RequestSendInteractor
+	CreateFiles      usecases.FilesCreationInteractor
 }
 
 func CreateCore(
@@ -17,10 +18,12 @@ func CreateCore(
 	fileReader adapters.FileReader,
 	printer adapters.Printer,
 	requestClient adapters.RequestClient,
+	fileCreator adapters.FileCreator,
 ) Core {
 	return Core{
 		DeleteFile:       usecases.CreateFilesDeletionInteractor(fileFinder, fileShredder),
 		PrintFileContent: usecases.CreateFileContentPrintInteractor(fileReader, printer),
 		SendRequest:      usecases.CreateRequestSendInteractor(requestClient),
+		CreateFiles:      usecases.CreateFilesCreationInteractor(fileFinder, fileCreator),
 	}
 }
