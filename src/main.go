@@ -19,7 +19,8 @@ func main() {
 	fileShredder := libs.FileShredder{}
 	fileReader := libs.FileReader{}
 	printer := libs.Printer{}
-	c := core.CreateCore(&fileFinder, &fileShredder, &fileReader, &printer)
+	requestClient := libs.RequestClient{}
+	c := core.CreateCore(&fileFinder, &fileShredder, &fileReader, &printer, &requestClient)
 	commandMap := cli.CommandMap{}
 	commandInterpreter := cli.CommandInterpreter{}
 	commandLauncher := cli.CommandLauncher{
@@ -36,6 +37,19 @@ func main() {
 	commandMap.Add("cat", func(args []string, options map[string]string) {
 		if err := c.PrintFileContent(args[0]); err != nil {
 			fmt.Printf("command \"cat\" failed: %s", err)
+		}
+	})
+
+	commandMap.Add("send", func(args []string, options map[string]string) {
+		if res, err := c.SendRequest(struct {
+			Data   string
+			Url    string
+			Method string
+		}{Data: options["data"], Url: options["url"], Method: options["method"]}); err != nil {
+			fmt.Printf("command \"send\" failed: %s", err)
+		} else {
+			fmt.Println("status: ", res.Code)
+			fmt.Println("body:\n", res.Body)
 		}
 	})
 
