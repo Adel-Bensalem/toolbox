@@ -61,10 +61,24 @@ func main() {
 	})
 
 	registerCommand("history", func(args []string, options map[string]string) {
-		if commands, err := c.PrintHistory(); err != nil {
-			fmt.Printf("command \"history\" failed: %s", err)
-		} else {
-			fmt.Println(strings.Join(commands, "\n"))
+		if len(args) == 0 {
+			fmt.Printf("command \"history\" failed: history command requires an intent parameter")
+			return
+		}
+
+		switch args[0] {
+		case "ls":
+			if commands, err := c.PrintHistory(); err != nil {
+				fmt.Printf("command \"history ls\" failed: %s", err)
+			} else {
+				fmt.Println(strings.Join(commands, "\n"))
+			}
+		case "clear":
+			if err := c.ClearHistory(); err != nil {
+				fmt.Printf("command \"history clear\" failed: %s", err)
+			}
+		default:
+			fmt.Printf("command \"history\" failed: history command requires an intent parameter")
 		}
 	})
 
