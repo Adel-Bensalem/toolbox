@@ -1,6 +1,7 @@
 package libs
 
 import (
+	"core/types"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -16,7 +17,7 @@ func (history *History) Get() ([]string, error) {
 		return make([]string, 0), err
 	}
 
-	var commands []Command
+	var commands []types.Command
 
 	err = json.Unmarshal(fileData, &commands)
 

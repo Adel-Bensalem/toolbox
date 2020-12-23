@@ -27,7 +27,7 @@ func openMemo() (*os.File, error) {
 	return file, nil
 }
 
-func (repository *MemoRepository) SaveMemo(title string, body string) error {
+func (repository *MemoRepository) SaveMemo(memo types.Memo) error {
 	file, err := openMemo()
 
 	if err != nil {
@@ -50,10 +50,7 @@ func (repository *MemoRepository) SaveMemo(title string, body string) error {
 		return err
 	}
 
-	fileContent = append(fileContent, types.Memo{
-		Title: title,
-		Body:  body,
-	})
+	fileContent = append(fileContent, memo)
 
 	jsonData, err := json.Marshal(fileContent)
 

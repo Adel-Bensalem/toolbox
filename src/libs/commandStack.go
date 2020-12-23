@@ -1,16 +1,11 @@
 package libs
 
 import (
+	"core/types"
 	"encoding/json"
 	"io/ioutil"
 	"os"
 )
-
-type Command struct {
-	Name    string
-	Args    []string
-	Options map[string]string
-}
 
 type CommandStack struct{}
 
@@ -32,7 +27,7 @@ func openHistory() (*os.File, error) {
 	return file, nil
 }
 
-func (stack *CommandStack) Push(name string, args []string, options map[string]string) error {
+func (stack *CommandStack) Push(command types.Command) error {
 	file, err := openHistory()
 
 	if err != nil {
@@ -47,7 +42,7 @@ func (stack *CommandStack) Push(name string, args []string, options map[string]s
 		return err
 	}
 
-	var fileContent []Command
+	var fileContent []types.Command
 
 	err = json.Unmarshal(fileData, &fileContent)
 
@@ -55,11 +50,7 @@ func (stack *CommandStack) Push(name string, args []string, options map[string]s
 		return err
 	}
 
-	fileContent = append(fileContent, Command{
-		Name:    name,
-		Args:    args,
-		Options: options,
-	})
+	fileContent = append(fileContent, command)
 
 	jsonData, err := json.Marshal(fileContent)
 
