@@ -12,6 +12,7 @@ type Core struct {
 	CreateFiles      usecases.FilesCreationInteractor
 	PushHistory      usecases.HistoryPushInteractor
 	PrintHistory     usecases.HistoryPrintInteractor
+	ClearHistory     usecases.HistoryClearInteractor
 }
 
 func CreateCore(
@@ -31,5 +32,6 @@ func CreateCore(
 		CreateFiles:      usecases.CreateFilesCreationInteractor(fileFinder, fileCreator),
 		PushHistory:      usecases.CreateHistoryPushInteractor(commandStack),
 		PrintHistory:     usecases.CreateHistoryPrintInteractor(history),
+		ClearHistory:     usecases.CreateHistoryClearInteractor(history),
 	}
 }
