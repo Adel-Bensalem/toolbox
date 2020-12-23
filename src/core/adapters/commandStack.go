@@ -1,5 +1,7 @@
 package adapters
 
+import "core/types"
+
 type CommandStack interface {
-	Push(name string, args []string, options map[string]string) error
+	Push(command types.Command) error
 }

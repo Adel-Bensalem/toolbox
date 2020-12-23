@@ -3,17 +3,18 @@ package usecases
 import (
 	"core/adapters"
 	"core/entities"
+	"core/types"
 	"errors"
 )
 
-type MemoSaveInteractor func(title string, body string) error
+type MemoSaveInteractor func(memo types.Memo) error
 
 func CreateMemoSaveInteractor(repository adapters.MemoRepository) MemoSaveInteractor {
-	return func(title string, body string) error {
-		if !entities.IsMemoValid(title, body) {
+	return func(memo types.Memo) error {
+		if !entities.IsMemoValid(memo) {
 			return errors.New("invalid memo provided")
 		}
 
-		return repository.SaveMemo(title, body)
+		return repository.SaveMemo(memo)
 	}
 }

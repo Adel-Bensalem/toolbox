@@ -1,8 +1,11 @@
 package usecases
 
-import "core/adapters"
+import (
+	"core/adapters"
+	"core/types"
+)
 
-type HistoryPushInteractor func(name string, args []string, options map[string]string) error
+type HistoryPushInteractor func(command types.Command) error
 
 func CreateHistoryPushInteractor(stack adapters.CommandStack) HistoryPushInteractor {
 	return stack.Push

@@ -2,6 +2,7 @@ package main
 
 import (
 	"core"
+	"core/types"
 	"fmt"
 	"libs"
 	"libs/cli"
@@ -44,7 +45,11 @@ func main() {
 	}
 	registerCommand := func(commandName string, handleCommand func(args []string, options map[string]string)) {
 		commandMap.Add(commandName, func(args []string, options map[string]string) {
-			c.PushHistory(commandName, args, options)
+			c.PushHistory(types.Command{
+				Name:    commandName,
+				Args:    args,
+				Options: options,
+			})
 
 			handleCommand(args, options)
 		})
@@ -92,7 +97,10 @@ func main() {
 
 		switch args[0] {
 		case "create":
-			if err := c.SaveMemo(options["title"], options["body"]); err != nil {
+			if err := c.SaveMemo(types.Memo{
+				Title: options["title"],
+				Body:  options["body"],
+			}); err != nil {
 				fmt.Printf("command \"memo create\" failed: %s", err)
 			}
 		case "read":

@@ -3,6 +3,6 @@ package adapters
 import "core/types"
 
 type MemoRepository interface {
-	SaveMemo(title string, body string) error
+	SaveMemo(memo types.Memo) error
 	GetMemos() ([]types.Memo, error)
 }
