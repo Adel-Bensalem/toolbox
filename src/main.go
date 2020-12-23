@@ -6,6 +6,7 @@ import (
 	"libs"
 	"libs/cli"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -22,7 +23,17 @@ func main() {
 	requestClient := libs.RequestClient{}
 	fileCreator := libs.FileCreator{}
 	commandStack := libs.CommandStack{}
-	c := core.CreateCore(&fileFinder, &fileShredder, &fileReader, &printer, &requestClient, &fileCreator, &commandStack)
+	history := libs.History{}
+	c := core.CreateCore(
+		&fileFinder,
+		&fileShredder,
+		&fileReader,
+		&printer,
+		&requestClient,
+		&fileCreator,
+		&commandStack,
+		&history,
+	)
 	commandMap := cli.CommandMap{}
 	commandInterpreter := cli.CommandInterpreter{}
 	commandLauncher := cli.CommandLauncher{
@@ -31,9 +42,7 @@ func main() {
 	}
 	registerCommand := func(commandName string, handleCommand func(args []string, options map[string]string)) {
 		commandMap.Add(commandName, func(args []string, options map[string]string) {
-			err := c.PushHistory(commandName, args, options)
-
-			fmt.Println(err)
+			c.PushHistory(commandName, args, options)
 
 			handleCommand(args, options)
 		})
@@ -48,6 +57,14 @@ func main() {
 	registerCommand("cat", func(args []string, options map[string]string) {
 		if err := c.PrintFileContent(args[0]); err != nil {
 			fmt.Printf("command \"cat\" failed: %s", err)
+		}
+	})
+
+	registerCommand("history", func(args []string, options map[string]string) {
+		if commands, err := c.PrintHistory(); err != nil {
+			fmt.Printf("command \"history\" failed: %s", err)
+		} else {
+			fmt.Println(strings.Join(commands, "\n"))
 		}
 	})
 
