@@ -13,6 +13,7 @@ type Core struct {
 	PushHistory      usecases.HistoryPushInteractor
 	PrintHistory     usecases.HistoryPrintInteractor
 	ClearHistory     usecases.HistoryClearInteractor
+	SaveMemo         usecases.MemoSaveInteractor
 }
 
 func CreateCore(
@@ -24,6 +25,7 @@ func CreateCore(
 	fileCreator adapters.FileCreator,
 	commandStack adapters.CommandStack,
 	history adapters.History,
+	repository adapters.MemoRepository,
 ) Core {
 	return Core{
 		DeleteFile:       usecases.CreateFilesDeletionInteractor(fileFinder, fileShredder),
@@ -33,5 +35,6 @@ func CreateCore(
 		PushHistory:      usecases.CreateHistoryPushInteractor(commandStack),
 		PrintHistory:     usecases.CreateHistoryPrintInteractor(history),
 		ClearHistory:     usecases.CreateHistoryClearInteractor(history),
+		SaveMemo:         usecases.CreateMemoSaveInteractor(repository),
 	}
 }
