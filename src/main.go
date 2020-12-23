@@ -24,6 +24,7 @@ func main() {
 	fileCreator := libs.FileCreator{}
 	commandStack := libs.CommandStack{}
 	history := libs.History{}
+	memoRepository := libs.MemoRepository{}
 	c := core.CreateCore(
 		&fileFinder,
 		&fileShredder,
@@ -33,6 +34,7 @@ func main() {
 		&fileCreator,
 		&commandStack,
 		&history,
+		&memoRepository,
 	)
 	commandMap := cli.CommandMap{}
 	commandInterpreter := cli.CommandInterpreter{}
@@ -79,6 +81,22 @@ func main() {
 			}
 		default:
 			fmt.Printf("command \"history\" failed: history command requires an intent parameter")
+		}
+	})
+
+	registerCommand("memo", func(args []string, options map[string]string) {
+		if len(args) == 0 {
+			fmt.Printf("command \"memo\" failed: memo command requires an intent parameter")
+			return
+		}
+
+		switch args[0] {
+		case "create":
+			if err := c.SaveMemo(options["title"], options["body"]); err != nil {
+				fmt.Printf("command \"memo create\" failed: %s", err)
+			}
+		default:
+			fmt.Printf("command \"memo\" failed: memo command requires an intent parameter")
 		}
 	})
 
