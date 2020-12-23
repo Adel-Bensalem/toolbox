@@ -7,7 +7,7 @@ import (
 
 type History struct{}
 
-func (history *History) GetHistory() ([]string, error) {
+func (history *History) Get() ([]string, error) {
 	var list []string
 	fileData, err := ioutil.ReadFile("history.json")
 

@@ -1,5 +1,5 @@
 package adapters
 
 type History interface {
-	GetHistory() ([]string, error)
+	Get() ([]string, error)
 }
