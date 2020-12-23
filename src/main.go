@@ -95,6 +95,15 @@ func main() {
 			if err := c.SaveMemo(options["title"], options["body"]); err != nil {
 				fmt.Printf("command \"memo create\" failed: %s", err)
 			}
+		case "read":
+			if memos, err := c.ReadMemos(); err != nil {
+				fmt.Printf("command \"memo create\" failed: %s", err)
+			} else {
+				for _, memo := range memos {
+					fmt.Println(memo.Title + ":")
+					fmt.Println(memo.Body + "\n")
+				}
+			}
 		default:
 			fmt.Printf("command \"memo\" failed: memo command requires an intent parameter")
 		}
