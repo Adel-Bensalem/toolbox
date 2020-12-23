@@ -10,6 +10,7 @@ type Core struct {
 	PrintFileContent usecases.FileContentPrintInteractor
 	SendRequest      usecases.RequestSendInteractor
 	CreateFiles      usecases.FilesCreationInteractor
+	PushHistory      usecases.HistoryPushInteractor
 }
 
 func CreateCore(
@@ -19,11 +20,13 @@ func CreateCore(
 	printer adapters.Printer,
 	requestClient adapters.RequestClient,
 	fileCreator adapters.FileCreator,
+	commandStack adapters.CommandStack,
 ) Core {
 	return Core{
 		DeleteFile:       usecases.CreateFilesDeletionInteractor(fileFinder, fileShredder),
 		PrintFileContent: usecases.CreateFileContentPrintInteractor(fileReader, printer),
 		SendRequest:      usecases.CreateRequestSendInteractor(requestClient),
 		CreateFiles:      usecases.CreateFilesCreationInteractor(fileFinder, fileCreator),
+		PushHistory:      usecases.CreateHistoryPushInteractor(commandStack),
 	}
 }

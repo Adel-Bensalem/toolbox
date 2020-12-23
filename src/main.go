@@ -21,33 +21,43 @@ func main() {
 	printer := libs.Printer{}
 	requestClient := libs.RequestClient{}
 	fileCreator := libs.FileCreator{}
-	c := core.CreateCore(&fileFinder, &fileShredder, &fileReader, &printer, &requestClient, &fileCreator)
+	commandStack := libs.CommandStack{}
+	c := core.CreateCore(&fileFinder, &fileShredder, &fileReader, &printer, &requestClient, &fileCreator, &commandStack)
 	commandMap := cli.CommandMap{}
 	commandInterpreter := cli.CommandInterpreter{}
 	commandLauncher := cli.CommandLauncher{
 		CommandMap:  &commandMap,
 		Interpreter: &commandInterpreter,
 	}
+	registerCommand := func(commandName string, handleCommand func(args []string, options map[string]string)) {
+		commandMap.Add(commandName, func(args []string, options map[string]string) {
+			err := c.PushHistory(commandName, args, options)
 
-	commandMap.Add("rm", func(args []string, options map[string]string) {
+			fmt.Println(err)
+
+			handleCommand(args, options)
+		})
+	}
+
+	registerCommand("rm", func(args []string, options map[string]string) {
 		if err := c.DeleteFile(args); err != nil {
 			fmt.Printf("command \"rm\" failed: %s", err)
 		}
 	})
 
-	commandMap.Add("cat", func(args []string, options map[string]string) {
+	registerCommand("cat", func(args []string, options map[string]string) {
 		if err := c.PrintFileContent(args[0]); err != nil {
 			fmt.Printf("command \"cat\" failed: %s", err)
 		}
 	})
 
-	commandMap.Add("make", func(args []string, options map[string]string) {
+	registerCommand("make", func(args []string, options map[string]string) {
 		if err := c.CreateFiles(args); err != nil {
 			fmt.Printf("command \"make\" failed: %s", err)
 		}
 	})
 
-	commandMap.Add("send", func(args []string, options map[string]string) {
+	registerCommand("send", func(args []string, options map[string]string) {
 		if res, err := c.SendRequest(struct {
 			Data   string
 			Url    string
