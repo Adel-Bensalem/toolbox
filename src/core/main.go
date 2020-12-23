@@ -14,6 +14,7 @@ type Core struct {
 	PrintHistory     usecases.HistoryPrintInteractor
 	ClearHistory     usecases.HistoryClearInteractor
 	SaveMemo         usecases.MemoSaveInteractor
+	ReadMemos        usecases.MemosReadInteractor
 }
 
 func CreateCore(
@@ -36,5 +37,6 @@ func CreateCore(
 		PrintHistory:     usecases.CreateHistoryPrintInteractor(history),
 		ClearHistory:     usecases.CreateHistoryClearInteractor(history),
 		SaveMemo:         usecases.CreateMemoSaveInteractor(repository),
+		ReadMemos:        usecases.CreateMemosReadInteractor(repository),
 	}
 }
